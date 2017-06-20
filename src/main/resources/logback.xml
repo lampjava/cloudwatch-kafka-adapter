@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" scan="true"
+    scanPeriod="30 seconds" debug="false">
+    <property name="LOG_HOME" value="/home/ubuntu/dockers/logs/cloudwatch" />
+    <property name="LOG_HOME_BACKUP" value="/home/ubuntu/dockers/logs/backup/cloudwatch" />
+    <property name="MAX_FILE_SIZE" value="100MB" />
+    <property name="MAX_HISTORY" value="10" />
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern><![CDATA[%d{HH:mm:ss.SSS} [%X %thread] %-5level %logger{36}.%M - %msg%n]]></pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/cloudwatch.log</file>
+        <encoder>
+            <pattern><![CDATA[%d{HH:mm:ss.SSS} [%X{TXID} - %thread] %-5level %logger{36}.%M - %msg%n]]></pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- for archiving <fileNamePattern>${LOG_HOME_BACKUP}/simple.%d{yyyy-MM-dd}.%i.gz</fileNamePattern> -->
+            <fileNamePattern><![CDATA[${LOG_HOME_BACKUP}/cloudwatch.%d{yyyy-MM-dd}.%i.log]]></fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="LogWriter" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.apache.kafka" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+    <logger name="org.chiwooplatform.integration.cloudwatch" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

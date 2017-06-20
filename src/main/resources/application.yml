@@ -1,0 +1,17 @@
+server:
+  port: 8085
+
+spring:
+  kafka:
+    bootstrap-servers: 10.251.11.21:9092
+    # bootstrap-servers: 192.168.56.21:9092
+    # bootstrap-servers: 192.168.0.152:9092,192.168.0.152:9093
+#    consumer: 
+#      group-id: myGroup
+#    template:
+#      default-topic: testTopic
+      # default-topic: my-replicated-topic
+    listener: 
+      concurrency: 3
+    producer: 
+      batch-size: 1000
